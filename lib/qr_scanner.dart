@@ -1,3 +1,5 @@
+// ignore_for_file: use_build_context_synchronously, deprecated_member_use
+
 import 'package:flutter/material.dart';
 import 'package:mobile_scanner/mobile_scanner.dart';
 import 'package:geolocator/geolocator.dart';
@@ -21,13 +23,11 @@ class _QrScannerState extends State<QrScanner> {
   }
 
   Future<void> _requestPermissions() async {
-    // Request camera permission
     var cameraStatus = await Permission.camera.status;
     if (!cameraStatus.isGranted) {
       cameraStatus = await Permission.camera.request();
     }
 
-    // Request location permission
     var locationStatus = await Permission.locationWhenInUse.status;
     if (!locationStatus.isGranted) {
       locationStatus = await Permission.locationWhenInUse.request();
@@ -53,7 +53,7 @@ class _QrScannerState extends State<QrScanner> {
           TextButton(
             onPressed: () {
               Navigator.of(ctx).pop();
-              Navigator.of(context).pop(); // back to welcome page
+              Navigator.of(context).pop();
             },
             child: const Text('OK'),
           ),
@@ -65,7 +65,6 @@ class _QrScannerState extends State<QrScanner> {
   Future<Position> _getCurrentLocation() async {
     bool serviceEnabled = await Geolocator.isLocationServiceEnabled();
     if (!serviceEnabled) {
-      // Show dialog asking user to enable location services
       await showDialog(
         context: context,
         builder: (ctx) => AlertDialog(
@@ -81,10 +80,8 @@ class _QrScannerState extends State<QrScanner> {
         ),
       );
 
-      // Open location settings so user can enable it
       await Geolocator.openLocationSettings();
 
-      // Throw error so the caller can handle
       return Future.error('Location services are disabled.');
     }
 
