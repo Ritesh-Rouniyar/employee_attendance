@@ -44,7 +44,7 @@ class _MyFormState extends State<loginPage> {
   void _loginform() {
     if (_formKey.currentState!.validate()) {
       ScaffoldMessenger.of(context)
-          .showSnackBar(const SnackBar(content: Text('Signup Successful')));
+          .showSnackBar(const SnackBar(content: Text('Login Successful')));
     }
     Navigator.pushReplacement(context, MaterialPageRoute(builder: (context)=> const WelcomePage(),),);
   }

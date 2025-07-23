@@ -5,8 +5,6 @@ import 'package:employee_attendance/drawer/myprofile.dart';
 import 'package:employee_attendance/drawer/site_message.dart';
 import 'package:employee_attendance/drawer/unable_to_attend.dart';
 import 'package:employee_attendance/register/login.dart';
-import 'package:permission_handler/permission_handler.dart';
-import 'package:location/location.dart';
 
 class WelcomePage extends StatefulWidget {
   const WelcomePage({super.key});
@@ -17,14 +15,15 @@ class WelcomePage extends StatefulWidget {
 
 class _WelcomePageState extends State<WelcomePage> {
   int _selectedIndex = 0;
-  String qrText = '';
+
+  String scannedText = '';
+  String latitude = '';
+  String longitude = '';
 
   void _onItemTapped(int index) {
     setState(() {
       _selectedIndex = index;
     });
-
-    // You can later add navigation here based on index if needed
   }
 
   @override
@@ -145,6 +144,7 @@ class _WelcomePageState extends State<WelcomePage> {
             ],
           ),
           SizedBox(height: deviceHeight * 0.02),
+
           Container(
             width: 250,
             height: 250,
@@ -166,9 +166,11 @@ class _WelcomePageState extends State<WelcomePage> {
                       ),
                     );
 
-                    if (result != null && result is String) {
+                    if (result != null && result is Map<String, dynamic>) {
                       setState(() {
-                        qrText = result;
+                        scannedText = result['scannedText'] ?? '';
+                        latitude = result['latitude']?.toString() ?? '';
+                        longitude = result['longitude']?.toString() ?? '';
                       });
                     }
                   },
@@ -179,10 +181,18 @@ class _WelcomePageState extends State<WelcomePage> {
             ),
           ),
           SizedBox(height: deviceHeight * 0.03),
-          Text(
-            qrText.isNotEmpty ? 'Scanned QR Code: $qrText' : '',
-            style: const TextStyle(fontSize: 16, color: Colors.black),
-          ),
+
+          if (scannedText.isNotEmpty)
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 20),
+              child: Text(
+                'Scanned QR Code: $scannedText\n'
+                'Latitude: $latitude\n'
+                'Longitude: $longitude',
+                style: const TextStyle(fontSize: 16, color: Colors.black),
+                textAlign: TextAlign.center,
+              ),
+            ),
         ],
       ),
       bottomNavigationBar: BottomNavigationBar(
